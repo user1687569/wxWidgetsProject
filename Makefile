@@ -27,12 +27,12 @@ clean:
 	-if exist $(OBJS)\accesstest.exe del $(OBJS)\accesstest.exe
 
 $(OBJS)\accesstest.exe: $(ACCESSTEST_OBJECTS) $(OBJS)\accesstest_sample_rc.o
-	$(foreach f,$(subst \,/,$(ACCESSTEST_OBJECTS)), $(shell echo $f >> $(subst \,/,$@).rsp.tmp))
+	$(foreach f, $(subst \,/,$(ACCESSTEST_OBJECTS)), $(shell echo $f >> $(subst \,/,$@).rsp.tmp))
 	@move /y $@.rsp.tmp $@.rsp >nul
 	$(CXX) -o $@ @$@.rsp -mthreads -L .\..\..\lib\gcc_lib  -Wl,--subsystem,windows -mwindows -lwxmsw31u_core -lwxbase31u -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregexu -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lshlwapi -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lversion -lwsock32 -lwininet -loleacc -luxtheme
-	@-del $@.rsp
+	del $@.rsp
 
-$(OBJS)\accesstest_sample_rc.o: ./../../samples/sample.rc
+$(OBJS)\accesstest_sample_rc.o: ./sample.rc
 	windres -i$< -o$@  --define __WXMSW__ --define NDEBUG --define _UNICODE --include-dir .\..\..\lib\gcc_lib\mswu --include-dir ./../../include --include-dir . --define wxUSE_DPI_AWARE_MANIFEST=2 --include-dir ./../../samples --define NOPCH
 
 $(OBJS)\accesstest_accesstest.o: ./accesstest.cpp
