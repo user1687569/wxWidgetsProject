@@ -279,7 +279,6 @@ public:
 // ----------------------------------------------------------------------------
 // main frame
 // ----------------------------------------------------------------------------
-
 // frame constructor
 MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, long style)
        : wxFrame(NULL, wxID_ANY, title, pos, size, style)

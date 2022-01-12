@@ -8,37 +8,42 @@ CXX = g++
 
 CPPDEPS = -MT$@ -MF$@.d -MD -MP
 
-OBJS = gcc_mswu
+OBJ_DIR = gcc_mswu
 
-ACCESSTEST_CXXFLAGS = -O2 -mthreads -D__WXMSW__ -DNDEBUG -D_UNICODE -I.\..\..\lib\gcc_lib\mswu -I.\..\..\include \
-	-W -Wall -I.\..\..\samples -DNOPCH -Wno-ctor-dtor-privacy
+INC_WXWIDGETS = E:\wxWidgets-3.1.5\include
+INC_WXWIDGETS2 = E:\wxWidgets-3.1.5\lib\gcc_lib\mswu
+LIB_WXWIDGETS = E:\wxWidgets-3.1.5\lib\gcc_lib
+INC_SAMPLES	= ./inc
 
-ACCESSTEST_OBJECTS = $(OBJS)\accesstest_sample_rc.o $(OBJS)\accesstest_accesstest.o
+WXDEFS = -D __WXMSW__ -D _UNICODE
+CXXFLAGS = -W -Wall -O2 -mthreads $(WXDEFS) -I $(INC_WXWIDGETS2) -I $(INC_WXWIDGETS) -I $(INC_SAMPLES)
 
-all: $(OBJS)
-$(OBJS):
-	-if not exist $(OBJS) mkdir $(OBJS)
+ACCESSTEST_OBJECTS = $(OBJ_DIR)\accesstest_sample_rc.o $(OBJ_DIR)\accesstest_accesstest.o
 
-all: $(OBJS)\accesstest.exe
+all: $(OBJ_DIR)
+$(OBJ_DIR):
+	-if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
+
+all: $(OBJ_DIR)\accesstest.exe
 
 clean: 
-	-if exist $(OBJS)\*.o del $(OBJS)\*.o
-	-if exist $(OBJS)\*.d del $(OBJS)\*.d
-	-if exist $(OBJS)\accesstest.exe del $(OBJS)\accesstest.exe
+	-if exist $(OBJ_DIR)\*.o del $(OBJ_DIR)\*.o
+	-if exist $(OBJ_DIR)\*.d del $(OBJ_DIR)\*.d
+	-if exist $(OBJ_DIR)\accesstest.exe del $(OBJ_DIR)\accesstest.exe
 
-$(OBJS)\accesstest.exe: $(ACCESSTEST_OBJECTS) $(OBJS)\accesstest_sample_rc.o
-	$(foreach f, $(subst \,/,$(ACCESSTEST_OBJECTS)), $(shell echo $f >> $(subst \,/,$@).rsp.tmp))
-	@move /y $@.rsp.tmp $@.rsp >nul
-	$(CXX) -o $@ @$@.rsp -mthreads -L .\..\..\lib\gcc_lib  -Wl,--subsystem,windows -mwindows -lwxmsw31u_core -lwxbase31u -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregexu -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lshlwapi -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lversion -lwsock32 -lwininet -loleacc -luxtheme
+
+$(OBJ_DIR)\accesstest.exe: $(ACCESSTEST_OBJECTS) $(OBJ_DIR)\accesstest_sample_rc.o
+	$(foreach f, $(subst \,/,$(ACCESSTEST_OBJECTS)), $(shell echo $f >> $(subst \,/,$@).rsp))
+	$(CXX) -o $@ @$@.rsp -mthreads -L $(LIB_WXWIDGETS)  -Wl,--subsystem,windows -mwindows -lwxmsw31u_core -lwxbase31u -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregexu -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lshlwapi -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lversion -lwsock32 -lwininet -loleacc -luxtheme
 	del $@.rsp
 
-$(OBJS)\accesstest_sample_rc.o: ./sample.rc
-	windres -i$< -o$@  --define __WXMSW__ --define NDEBUG --define _UNICODE --include-dir .\..\..\lib\gcc_lib\mswu --include-dir ./../../include --include-dir . --define wxUSE_DPI_AWARE_MANIFEST=2 --include-dir ./../../samples --define NOPCH
+$(OBJ_DIR)\accesstest_sample_rc.o: ./sample.rc
+	windres -i$< -o$@  -D __WXMSW__ -D _UNICODE -I $(INC_WXWIDGETS2) -I $(INC_WXWIDGETS) -I $(INC_SAMPLES)
 
-$(OBJS)\accesstest_accesstest.o: ./accesstest.cpp
-	$(CXX) -c -o $@ $(ACCESSTEST_CXXFLAGS) $(CPPDEPS) $<
+$(OBJ_DIR)\accesstest_accesstest.o: ./accesstest.cpp
+	$(CXX) -c -o $@ $(CXXFLAGS) $(CPPDEPS) $<
 
 .PHONY: all clean
 
 # Dependencies tracking:
--include $(OBJS)/*.d
+-include $(OBJ_DIR)/*.d
