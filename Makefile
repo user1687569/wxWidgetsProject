@@ -6,44 +6,41 @@
 
 CXX = g++
 
-CPPDEPS = -MT$@ -MF$@.d -MD -MP
+BIN_DIR	= bin
+INC_DIR = inc
+OBJ_DIR = obj
+RES_DIR = res
+SRC_DIR = src
 
-OBJ_DIR = gcc_mswu
+INC_WXWIDGETS 	= E:\wxWidgets-3.1.5\include
+INC_WXWIDGETS2 	= E:\wxWidgets-3.1.5\lib\gcc_lib\mswu
+LIB_WXWIDGETS 	= E:\wxWidgets-3.1.5\lib\gcc_lib
 
-INC_WXWIDGETS = E:\wxWidgets-3.1.5\include
-INC_WXWIDGETS2 = E:\wxWidgets-3.1.5\lib\gcc_lib\mswu
-LIB_WXWIDGETS = E:\wxWidgets-3.1.5\lib\gcc_lib
-INC_SAMPLES	= ./inc
+VPATH = $(SRC_DIR)
 
 WXDEFS = -D __WXMSW__ -D _UNICODE
-CXXFLAGS = -W -Wall -O2 -mthreads $(WXDEFS) -I $(INC_WXWIDGETS2) -I $(INC_WXWIDGETS) -I $(INC_SAMPLES)
+INC_PATH = -I $(INC_WXWIDGETS2) -I $(INC_WXWIDGETS) -I $(RES_DIR)
+LIB_PATH = -L $(LIB_WXWIDGETS)
+LIBS =	-lwxmsw31u_core -lwxbase31u -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregexu -lwxexpat 	\
+		-lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lshlwapi -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lversion -lwsock32 -lwininet -loleacc -luxtheme
 
-ACCESSTEST_OBJECTS = $(OBJ_DIR)\accesstest_sample_rc.o $(OBJ_DIR)\accesstest_accesstest.o
+CXXFLAGS = -W -Wall -O2 -mthreads $(WXDEFS) $(INC_PATH)
 
-all: $(OBJ_DIR)
-$(OBJ_DIR):
-	-if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
+TARGET := $(BIN_DIR)/accesstest.exe
+OBJS := $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(notdir $(wildcard $(SRC_DIR)/*.cpp)))  \
+		$(OBJ_DIR)/accesstest_sample_rc.o
 
-all: $(OBJ_DIR)\accesstest.exe
+$(TARGET): $(OBJS)
+	$(CXX) -o $@ $(OBJS) -mthreads -Wl,--subsystem,windows -mwindows  $(LIB_PATH) $(LIBS) 
 
+$(OBJ_DIR)/accesstest_sample_rc.o: $(RES_DIR)/sample.rc
+	windres -i$< -o$@  $(WXDEFS) $(INC_PATH)
+
+$(OBJ_DIR)/%.o: %.cpp
+	$(CXX) -c -o $@ $(CXXFLAGS) $<
+
+.PHONY: all clean
 clean: 
 	-if exist $(OBJ_DIR)\*.o del $(OBJ_DIR)\*.o
 	-if exist $(OBJ_DIR)\*.d del $(OBJ_DIR)\*.d
-	-if exist $(OBJ_DIR)\accesstest.exe del $(OBJ_DIR)\accesstest.exe
-
-
-$(OBJ_DIR)\accesstest.exe: $(ACCESSTEST_OBJECTS) $(OBJ_DIR)\accesstest_sample_rc.o
-	$(foreach f, $(subst \,/,$(ACCESSTEST_OBJECTS)), $(shell echo $f >> $(subst \,/,$@).rsp))
-	$(CXX) -o $@ @$@.rsp -mthreads -L $(LIB_WXWIDGETS)  -Wl,--subsystem,windows -mwindows -lwxmsw31u_core -lwxbase31u -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregexu -lwxexpat -lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lshlwapi -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lversion -lwsock32 -lwininet -loleacc -luxtheme
-	del $@.rsp
-
-$(OBJ_DIR)\accesstest_sample_rc.o: ./sample.rc
-	windres -i$< -o$@  -D __WXMSW__ -D _UNICODE -I $(INC_WXWIDGETS2) -I $(INC_WXWIDGETS) -I $(INC_SAMPLES)
-
-$(OBJ_DIR)\accesstest_accesstest.o: ./accesstest.cpp
-	$(CXX) -c -o $@ $(CXXFLAGS) $(CPPDEPS) $<
-
-.PHONY: all clean
-
-# Dependencies tracking:
--include $(OBJ_DIR)/*.d
+	-if exist $(BIN_DIR)\accesstest.exe del $(BIN_DIR)\accesstest.exe
