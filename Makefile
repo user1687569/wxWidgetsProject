@@ -22,7 +22,8 @@ LIBS =	-lwxmsw31u_core -lwxbase31u -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregexu
 
 CXXFLAGS = -W -Wall -O2 -mthreads $(WXDEFS) $(INC_PATH)
 
-TARGET := $(BIN_DIR)/helloworld.exe
+APP_NAME := helloworld
+TARGET := $(BIN_DIR)/$(APP_NAME).exe
 OBJS := $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(notdir $(wildcard $(SRC_DIR)/*.cpp)))  
 
 $(TARGET): $(OBJS)

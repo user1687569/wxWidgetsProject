@@ -63,20 +63,20 @@ MyFrame::MyFrame()
 }
 
 
-void MyFrame::OnExit(wxCommandEvent& event)
+void MyFrame::OnExit(wxCommandEvent& WXUNUSED(event))
 {
     Close(true);
 }
 
 
-void MyFrame::OnAbout(wxCommandEvent& event)
+void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxMessageBox("This is a wxWidgets Hello World example",
                  "About Hello World", wxOK | wxICON_INFORMATION);
 }
 
 
-void MyFrame::OnHello(wxCommandEvent& event)
+void MyFrame::OnHello(wxCommandEvent& WXUNUSED(event))
 {
     wxLogMessage("Hello world from wxWidgets!");
 }
