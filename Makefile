@@ -22,7 +22,7 @@ LIBS =	-lwxmsw31u_core -lwxbase31u -lwxtiff -lwxjpeg -lwxpng -lwxzlib -lwxregexu
 
 CXXFLAGS = -W -Wall -O2 -mthreads $(WXDEFS) $(INC_PATH)
 
-APP_NAME := helloworld
+APP_NAME := animationTest
 TARGET := $(BIN_DIR)/$(APP_NAME).exe
 OBJS := $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(notdir $(wildcard $(SRC_DIR)/*.cpp)))  
 
