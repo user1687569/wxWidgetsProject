@@ -148,7 +148,7 @@ MyFrame::MyFrame(wxWindow *parent,
             wxSizerFlags().Centre().Border());
     
     m_animationCtrl = new wxAnimationCtrl(this, wxID_ANY);
-    if(m_animationCtrl->LoadFile("./../res/throbber.gif"))
+    if(m_animationCtrl->LoadFile("./../res/hourglass.ani"))
         m_animationCtrl->Play();
 
     sz->Add(m_animationCtrl, wxSizerFlags().Centre().Border());
