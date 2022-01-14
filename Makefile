@@ -32,6 +32,8 @@ $(TARGET): $(OBJS)
 $(OBJ_DIR)/%.o: %.cpp
 	$(CXX) -c -o $@ $(CXXFLAGS) $<
 
+$(OBJ_DIR)/animationTest_rc.o: ./res/resource.rc
+
 .PHONY: all clean
 clean: 
 	-if exist $(OBJ_DIR)\*.o del $(OBJ_DIR)\*.o
