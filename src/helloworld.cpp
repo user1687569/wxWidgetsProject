@@ -8,19 +8,19 @@
 
 class MyApp : public wxApp
 {
-    public:
-        virtual bool OnInit();
+public:
+    virtual bool OnInit();
 };
 
 
 class MyFrame : public wxFrame
 {
-    public:
-        MyFrame();
-    private:
-        void OnHello(wxCommandEvent& event);
-        void OnExit(wxCommandEvent& event);
-        void OnAbout(wxCommandEvent& event);
+public:
+    MyFrame();
+private:
+    void OnHello(wxCommandEvent& event);
+    void OnExit(wxCommandEvent& event);
+    void OnAbout(wxCommandEvent& event);
 };
 
 
@@ -44,16 +44,20 @@ bool MyApp::OnInit()
 MyFrame::MyFrame()
     : wxFrame(NULL, wxID_ANY, "Hello World")
 {
-    wxMenu *menuFile = new wxMenu;
-    menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
+    SetIcon(wxICON(wxWidgetsIcon));
+
+    wxMenu *fileMenu = new wxMenu;
+    fileMenu->Append(ID_Hello, "&Hello...\tCtrl-H",
                      "Help string shown in status bar for this menu item");
-    menuFile->AppendSeparator();
-    menuFile->Append(wxID_EXIT);
-    wxMenu *menuHelp = new wxMenu;
-    menuHelp->Append(wxID_ABOUT);
+    fileMenu->AppendSeparator();
+    fileMenu->Append(wxID_EXIT);
+
+    wxMenu *helpMenu = new wxMenu;
+    helpMenu->Append(wxID_ABOUT);
+
     wxMenuBar *menuBar = new wxMenuBar;
-    menuBar->Append(menuFile, "&File");
-    menuBar->Append(menuHelp, "&Help");
+    menuBar->Append(fileMenu, "&File");
+    menuBar->Append(helpMenu, "&Help");
     SetMenuBar( menuBar );
     CreateStatusBar();
     SetStatusText("Welcome to wxWidgets!");

@@ -1,0 +1,2 @@
+//This icon is used with wxFrame::SetIcon()
+wxWidgetsIcon   ICON    "wxWidgets.ico"
