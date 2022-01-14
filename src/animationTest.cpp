@@ -130,8 +130,7 @@ MyFrame::MyFrame(wxWindow *parent,
                     "Sets the background colour of the control");
 
     wxMenu *helpMenu = new wxMenu;
-    menuHelp->Append(wxID_ABOUT);
-
+    helpMenu->Append(wxID_ABOUT);
 
     wxMenuBar *menuBar = new wxMenuBar;
     menuBar->Append(fileMenu, "&File");
@@ -149,7 +148,7 @@ MyFrame::MyFrame(wxWindow *parent,
             wxSizerFlags().Centre().Border());
     
     m_animationCtrl = new wxAnimationCtrl(this, wxID_ANY);
-    if(m_animationCtrl->LoadFile("./../res/throbber.gif"));
+    if(m_animationCtrl->LoadFile("./../res/throbber.gif"))
         m_animationCtrl->Play();
 
     sz->Add(m_animationCtrl, wxSizerFlags().Centre().Border());
@@ -171,7 +170,7 @@ void MyFrame::OnPlay(wxCommandEvent& WXUNUSED(event))
 }
 
 
-void MyFrame::OnStop(wxCommandEvent& WXUNUSED（event)
+void MyFrame::OnStop(wxCommandEvent& WXUNUSED(event))
 {
     m_animationCtrl->Stop();
 }
@@ -183,9 +182,9 @@ void MyFrame::OnSetNullAnimation(wxCommandEvent& WXUNUSED(event))
 }
 
 
-void MyFrame::OnSetInactiveBitmap(wxCommandEvent& wxUNUSED(event))
+void MyFrame::OnSetInactiveBitmap(wxCommandEvent& event)
 {
-    if(event.IsChecked())
+    if (event.IsChecked())
     {
         wxBitmap bitmap = wxArtProvider::GetBitmap(wxART_MISSING_IMAGE);
         m_animationCtrl->SetInactiveBitmap(bitmap);
